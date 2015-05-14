@@ -43,24 +43,11 @@ class Gol:
         self.update_canvas()
 
         document["btn_start_stop"].disabled = "disabled"
-        document["btn_step"].disabled = "disabled"
+        document["btn_tick"].disabled = "disabled"
         document["btn_clear"].disabled = "disabled"
-
-
-
-
-    """
-    def start(self):
-        self.init_grid()
-        self.update_canvas()
-
-        #todo : self.clear_canvas()
-        #todo : self.root.mainloop()
-    """
 
     def init_grid(self):
         self.grid = [[0 for x in range(self.cols)] for y in range(self.rows)]
-
 
     def put_rect(self, rw, cl, color):
         x1 = cl * self.size
@@ -103,7 +90,7 @@ class Gol:
         self.update_canvas()
 
         document["btn_start_stop"].disabled = "disabled"
-        document["btn_step"].disabled = "disabled"
+        document["btn_tick"].disabled = "disabled"
         document["btn_clear"].disabled = "disabled"
 
     def seed(self, ev):
@@ -122,7 +109,7 @@ class Gol:
         self.update_canvas()
 
         document["btn_start_stop"].disabled = ""
-        document["btn_step"].disabled = ""
+        document["btn_tick"].disabled = ""
 
         self.initial_state = deepcopy(self.grid)
 
@@ -132,7 +119,7 @@ class Gol:
             document["btn_start_stop"].text = "Start"
 
             document["btn_start_stop"].disabled = ""
-            document["btn_step"].disabled = ""
+            document["btn_tick"].disabled = ""
             document["btn_clear"].disabled = ""
         else:
             self.tick_delay = int(document["edt_delay"].value)
@@ -140,7 +127,7 @@ class Gol:
             document["btn_start_stop"].text = "Stop"
 
             document["btn_start_stop"].disabled = ""
-            document["btn_step"].disabled = "disabled"
+            document["btn_tick"].disabled = "disabled"
             document["btn_clear"].disabled = "disabled"
 
             self.tick()
@@ -151,7 +138,7 @@ class Gol:
         document["lbl_alive"].text = "Alive: %d" %(self.alive)
         document["lbl_dead"].text = "Dead: %d" %(self.dead)
 
-    def tick(self):
+    def tick(self, ev=None):
         if self.in_tick:
             return
 
@@ -206,5 +193,6 @@ gol = Gol()
 
 document['btn_seed'].bind('click', gol.seed)
 document['btn_start_stop'].bind('click', gol.start_stop)
+document['btn_tick'].bind('click', gol.tick)
 
 #gol.start()

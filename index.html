@@ -10,7 +10,12 @@
     <script type="text/python" src="automata.py"></script>
 
 </head>
-<body onload="brython(1)">
+<body onload="brython()">
+
+<a href="http://github.com/ctengiz/brautomata">
+    <img alt="Fork me on GitHub" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" style="position: absolute; top: 0; right: 0; border: 0;"></img>
+</a>
+
 
 <div class="container-fluid">
     <div class="row" style="margin-top: 5px;">
@@ -37,7 +42,7 @@
                 <div class="form-group">
                     <label class="col-sm-6 control-label">Delay (ms)</label>
                     <div class="col-sm-6">
-                        <input  type="text" class="form-control input-sm" id="edt_delay" value="100">
+                        <input  type="text" class="form-control input-sm" id="edt_delay" value="10">
                     </div>
                 </div>
                 <div class="form-group">
@@ -60,7 +65,7 @@
                     <button class="btn btn-default btn-block" id="btn_seed">Seed</button>
                     <button class="btn btn-default btn-block" id="btn_clear">Clear</button>
                     <button class="btn btn-default btn-block" id="btn_start_stop">Start</button>
-                    <button class="btn btn-default btn-block" id="btn_step">Step</button>
+                    <button class="btn btn-default btn-block" id="btn_tick">Step</button>
                 </div>
             </div>
             <div class="row">
@@ -76,19 +81,7 @@
             <canvas id="my-canvas" width="600" height="300"></canvas>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-12">
-
-        </div>
-    </div>
-
-
 </div>
-
-
-
-
 </body>
 </html>
 
