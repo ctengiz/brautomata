@@ -194,5 +194,3 @@ gol = Gol()
 document['btn_seed'].bind('click', gol.seed)
 document['btn_start_stop'].bind('click', gol.start_stop)
 document['btn_tick'].bind('click', gol.tick)
-
-#gol.start()
