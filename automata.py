@@ -1,37 +1,24 @@
 from copy import deepcopy
 import random
+import datetime
 
 from browser import document, timer
 
 
 class Gol:
-    def __init__(self, rows=30, cols=60, size=10, tick_delay=100, seed_ratio=30, rule='23/3'):
+    def __init__(self):
         self.canvas = document["my-canvas"]
         self.ctx = self.canvas.getContext("2d")
-        self.ctx.translate(.5, .5)
+        #self.ctx.translate(.5, .5)
 
         self.is_active = False
         self.in_tick = False
-
-        self.cols = cols
-        self.rows = rows
-        self.size = size
-
-        #Rule is defined as S/B notation.
-        #Some well-known rules :
-        #23/3       : Conway's game of life
-        #1234/3     : Mazetric
-        #12345/3    : Maze
-        #For more info : http://www.conwaylife.com/wiki/Cellular_automaton
-        self.rule = rule
 
         self.grid = []
         self.initial_state = []
         self.tick_count = 0
         self.dead = 0
         self.alive = 0
-        self.tick_delay = tick_delay #in ms
-        self.seed_ratio = seed_ratio
 
         self.line_width = 1
         self.alive_cell_color = "#00FF00"
@@ -46,8 +33,33 @@ class Gol:
         document["btn_tick"].disabled = "disabled"
         document["btn_clear"].disabled = "disabled"
 
-    def init_grid(self):
+    def init_grid(self, ev=None):
+        print(">> init_grid", datetime.datetime.utcnow())
+
+        self.cols = int(document["edt_cols"].value)
+        self.rows = int(document["edt_rows"].value)
+        self.size = int(document["edt_size"].value)
+        self.seed_ratio = int(document["edt_seed"].value)
+
+        #Rule is defined as S/B notation.
+        #Some well-known rules :
+        #23/3       : Conway's game of life
+        #1234/3     : Mazetric
+        #12345/3    : Maze
+        #For more info : http://www.conwaylife.com/wiki/Cellular_automaton
+        self.rule = document["edt_rule"].value
+
+        self.tick_count = 0
+
+        self.canvas.width = self.cols * self.size
+        self.canvas.height = self.rows * self.size
+
+        document["btn_start_stop"].disabled = "disabled"
+        document["btn_tick"].disabled = "disabled"
+        document["btn_clear"].disabled = "disabled"
+
         self.grid = [[0 for x in range(self.cols)] for y in range(self.rows)]
+        print("<< init_grid", datetime.datetime.utcnow())
 
     def put_rect(self, rw, cl, color):
         x1 = cl * self.size
@@ -60,8 +72,11 @@ class Gol:
         self.dead = 0
         self.alive = 0
 
-        for rw in range(self.rows):
-            for cl in range(self.cols):
+        print(">> update_canvas", datetime.datetime.utcnow())
+        rw = 0
+        while rw < self.rows:
+            cl = 0
+            while cl < self.cols:
                 if self.grid[rw][cl]:
                     color = self.alive_cell_color
                     self.alive += 1
@@ -71,30 +86,16 @@ class Gol:
 
                 self.put_rect(rw, cl, color)
 
+                cl = cl + 1
+            rw = rw + 1
+
         self.update_labels()
-
-    def clear_canvas(self):
-        self.cols = int(document["edt_cols"].value)
-        self.rows = int(document["edt_rows"].value)
-        self.size = int(document["edt_size"].value)
-        self.seed_ratio = int(document["edt_seed"].value)
-        self.rule = document["edt_rule"].value
-
-        self.tick_count = 0
-
-        self.init_grid()
-
-        self.canvas.width = self.cols * self.size
-        self.canvas.height = self.rows * self.size
-
-        self.update_canvas()
-
-        document["btn_start_stop"].disabled = "disabled"
-        document["btn_tick"].disabled = "disabled"
-        document["btn_clear"].disabled = "disabled"
+        print("<< update_canvas", datetime.datetime.utcnow())
 
     def seed(self, ev):
-        self.clear_canvas()
+        print(">> seed", datetime.datetime.utcnow())
+
+        self.init_grid()
 
         for rw in range(self.rows):
             for cl in range(self.cols):
@@ -110,8 +111,10 @@ class Gol:
 
         document["btn_start_stop"].disabled = ""
         document["btn_tick"].disabled = ""
+        document["btn_clear"].disabled = ""
 
         self.initial_state = deepcopy(self.grid)
+        print("<< seed", datetime.datetime.utcnow())
 
     def start_stop(self, ev):
         if self.is_active:
@@ -154,8 +157,10 @@ class Gol:
         _sr = [int(x) for x in _sr]
         _br = [int(x) for x in _br]
 
-        for rw in range(self.rows):
-            for cl in range(self.cols):
+        rw = 0
+        while rw < self.rows:
+            cl = 0
+            while cl < self.cols:
                 n_alive = 0
 
                 for x in range(-1, 2):
@@ -180,6 +185,9 @@ class Gol:
                     if n_alive in _br:
                         self.grid[rw][cl] = 1
 
+                cl = cl + 1
+            rw = rw + 1
+
         self.in_tick = False
         self.tick_count += 1
 
@@ -194,3 +202,4 @@ gol = Gol()
 document['btn_seed'].bind('click', gol.seed)
 document['btn_start_stop'].bind('click', gol.start_stop)
 document['btn_tick'].bind('click', gol.tick)
+document['btn_clear'].bind('click', gol.init_grid)
